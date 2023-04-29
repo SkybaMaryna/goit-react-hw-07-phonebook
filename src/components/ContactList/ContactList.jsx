@@ -3,12 +3,17 @@ import { StyledContactList, StyledContactItem } from './ContactList.styled';
 import { StyledButton } from 'components/ContactForm/ContactForm.styled';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectContacts, selectFilter } from 'redux/selectors';
-import { deleteContact } from 'redux/contactsSlice';
+import { useEffect } from 'react';
+import { fetchContacts, deleteContact } from 'redux/operations';
 
 export const ContactList = () => {
   const contacts = useSelector(selectContacts);
   const filter = useSelector(selectFilter);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
 
   const applyFilters = () => {
     return contacts.filter(contact =>
@@ -18,9 +23,9 @@ export const ContactList = () => {
 
   return (
     <StyledContactList>
-      {applyFilters().map(({ name, number, id }) => (
+      {applyFilters().map(({ name, phone, id }) => (
         <StyledContactItem key={id}>
-          <Contact name={name} number={number} />
+          <Contact name={name} number={phone} />
           <StyledButton
             type="button"
             onClick={() => {
